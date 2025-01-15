@@ -9,8 +9,18 @@ import numpy as np
 import serial
 import time
 
-# check with port the Arduino is set to right now
-ser = serial.Serial('/dev/ttyUSB4', 9600)
+# Output directory
+save_path = r"../Data/Output"
+save_dir = os.path.abspath(save_path) + '//'
+
+if not os.path.exists(save_dir):
+    # Create the directory if it does not exist
+    os.makedirs(save_dir)
+
+output_filename=r'Date_ExerpimentID_trialnumber.nc'
+
+# check wich port the Arduino is set to right now
+ser = serial.Serial('/dev/ttyUSB1', 9600)
 ser.write(str.encode('0'))
 time.sleep(1)
 
@@ -64,7 +74,7 @@ with MCAM() as mcam:
 
     # saved_path = None
 
-    saved_path = owl.mcam_data.save_video(video_dataset,'/MCAM_data/Data_Franz/3_22_24_Adaptive_Volvox_N_C_F_R/3_22_24_Adaptive_Volvox_N_C_F_R_trial_1.nc', tqdm=tqdm_save)
+    saved_path = owl.mcam_data.save_video(video_dataset,save_dir+output_filename, tqdm=tqdm_save)
 
     print(f"Data saved to {saved_path}")
 

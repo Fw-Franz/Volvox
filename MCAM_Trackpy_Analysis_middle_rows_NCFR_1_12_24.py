@@ -29,6 +29,16 @@ from owl import mcam_data
 ## 1) Parameters governing loading and tracking
 ############################################
 
+data_path = r"../Data/12_29_23"
+root_directory = os.path.abspath(data_path) + '//'
+
+data_filename=r'Date_ExerpimentID_trialnumber.nc'
+
+
+date='12_29_23'
+
+trial_n=1
+
 analyze_subset = True  # if this is True, it will only analyze frames starting at frames_to_analyze_start
 # going to frames_to_analyze_end. Check in the image sequence if there was any moving of the chamber at beginning or end.
 
@@ -97,25 +107,7 @@ plot_1st_chamber = True  # True or False to plot the left-right bias counts
 plot_2nd_chamber = True  # True or False to plot the top-bottom bias counts
 
 
-# label_left_chamber_top = "Top half Nimodipine"
-# label_left_chamber_bottom = "Bottom half Nimodipine"
-# label_right_chamber_top = "Top half Control"
-# label_right_chamber_bottom = "Bottom half Control"
-
-root_directory = r'/MCAM_data/Data_Franz/12_29_23/'
-
-date='12_29_23'
-
-# dataset = mcam_data.load(root_directory+'12_29_23_N_C_F_R_15min_20231229_144144_768.nc')
-# trial_n=1
-
-# dataset = mcam_data.load(root_directory+'12_29_23_N_C_F_R_2_15min_20231229_151441_348.nc')
-# trial_n=2
-
-dataset = mcam_data.load(root_directory+'12_29_23_N_C_F_R_3_15min_20231229_155235_572.nc')
-trial_n=3
-
-
+dataset = mcam_data.load(root_directory+data_filename)
 
 
 sub_folder_name = date+'_trial_'+str(trial_n)
@@ -139,7 +131,6 @@ left_right_media_condition1=['Fixed','Random']
 df_mean_Vnum=pd.DataFrame(index=None, columns=['Date', 'Trial', 'Light Condition Top','Light Condition Bottom','Row Condition','Media Condition','Average Number Volvox Top','Average Number Volvox Bottom'], dtype=None, copy=None)
 
 cameras_to_process_y=[0,1]
-# cameras_to_process_y=[0]
 cameras_to_process_x=[0,1,2,3,4,5]
 
 for camera_y in cameras_to_process_y:
@@ -163,11 +154,8 @@ for camera_y in cameras_to_process_y:
 
         tp.annotate(f, frames[frames_to_analyze_start]);
 
-        # f2 = tp.locate(frames[0], int(5), invert=False)
-        # f2.head()
         directory_new=root_directory
 
-        # base_dir = str(Path(directory_new).parents[0])
         graph_folder=subfolder_path+'Graphs/'
         data_folder=subfolder_path+'Data/'
 
@@ -280,12 +268,6 @@ for camera_y in cameras_to_process_y:
         for i in unique_list:
             t5 = t4.loc[t4.frame == i]
 
-            #     t_left1=t5.loc[(t5.x<x1)&(t5.y<y)]
-            #     t_right1=t5.loc[(t5.x>x2)&(t5.y<y)]
-
-            #     t_left2=t5.loc[(t5.x<x1)&(t5.y>y)]
-            #     t_right2=t5.loc[(t5.x>x2)&(t5.y>y)]
-
             t_left_top= t5.loc[(t5.y < midpoint_y+1) & (t5.x > midpoint_x)]
             t_left_bottom = t5.loc[(t5.y < midpoint_y+1) & (t5.x < midpoint_x+1)]
 
@@ -306,7 +288,6 @@ for camera_y in cameras_to_process_y:
         print('mean # right top ('+label_right_chamber_top+') : ', rt.mean(), file=textfile)
         print('mean # right bottom ('+label_right_chamber_bottom+') : ', rb.mean(), file=textfile)
 
-        # if camera_x==cameras_to_process_x[0] and camera_x==cameras_to_process_y[0]:
         if camera_y==0:
             left_right_media_condition=left_right_media_condition1
         elif camera_y==1:

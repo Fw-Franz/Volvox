@@ -29,6 +29,16 @@ from owl import mcam_data
 ## 1) Parameters governing loading and tracking
 ############################################
 
+data_path = r"../Data/3_22_24"
+root_directory = os.path.abspath(data_path) + '//'
+
+data_filename=r'Date_ExerpimentID_trialnumber.nc'
+
+date='3_22_24'
+
+trial_n=1
+
+
 analyze_subset = True  # if this is True, it will only analyze frames starting at frames_to_analyze_start
 # going to frames_to_analyze_end. Check in the image sequence if there was any moving of the chamber at beginning or end.
 
@@ -96,25 +106,7 @@ fps = 4  # frames per second of video taking (as in what was your framerate duri
 plot_1st_chamber = True  # True or False to plot the left-right bias counts
 plot_2nd_chamber = True  # True or False to plot the top-bottom bias counts
 
-
-# label_left_chamber_top = "Top half Nimodipine"
-# label_left_chamber_bottom = "Bottom half Nimodipine"
-# label_right_chamber_top = "Top half Control"
-# label_right_chamber_bottom = "Bottom half Control"
-
-root_directory = r'/MCAM_data/Data_Franz/3_22_24_Adaptive_Volvox_N_C_F_R/'
-
-date='3_22_24'
-
-# dataset = mcam_data.load(root_directory+'12_29_23_N_C_F_R_15min_20231229_144144_768.nc')
-# trial_n=1
-
-# dataset = mcam_data.load(root_directory+'12_29_23_N_C_F_R_2_15min_20231229_151441_348.nc')
-# trial_n=2
-
-dataset = mcam_data.load(root_directory+'3_22_24_Adaptive_Volvox_N_C_F_R_trial_1_20240322_170032_177.nc')
-trial_n=1
-
+dataset = mcam_data.load(root_directory+data_filename)
 
 
 
@@ -138,7 +130,7 @@ left_right_media_condition=['Alga Gro','Alga Gro']
 df_mean_Vnum=pd.DataFrame(index=None, columns=['Date', 'Trial', 'Light Condition Top','Light Condition Bottom','Row Condition','Media Condition','Average Number Volvox Top','Average Number Volvox Bottom'], dtype=None, copy=None)
 
 cameras_to_process_y=[0,1,2,3]
-# cameras_to_process_y=[0]
+
 cameras_to_process_x=[0,1,2,3,4,5]
 
 for camera_y in cameras_to_process_y:
@@ -162,11 +154,8 @@ for camera_y in cameras_to_process_y:
 
         tp.annotate(f, frames[frames_to_analyze_start]);
 
-        # f2 = tp.locate(frames[0], int(5), invert=False)
-        # f2.head()
         directory_new=root_directory
 
-        # base_dir = str(Path(directory_new).parents[0])
         graph_folder=subfolder_path+'Graphs/'
         data_folder=subfolder_path+'Data/'
 
@@ -274,16 +263,9 @@ for camera_y in cameras_to_process_y:
         rt = np.zeros(len(unique_list))
         rb = np.zeros(len(unique_list))
 
-        # print(unique_list)
         ii = 0
         for i in unique_list:
             t5 = t4.loc[t4.frame == i]
-
-            #     t_left1=t5.loc[(t5.x<x1)&(t5.y<y)]
-            #     t_right1=t5.loc[(t5.x>x2)&(t5.y<y)]
-
-            #     t_left2=t5.loc[(t5.x<x1)&(t5.y>y)]
-            #     t_right2=t5.loc[(t5.x>x2)&(t5.y>y)]
 
             t_left_top= t5.loc[(t5.y < midpoint_y+1) & (t5.x > midpoint_x)]
             t_left_bottom = t5.loc[(t5.y < midpoint_y+1) & (t5.x < midpoint_x+1)]
@@ -304,8 +286,6 @@ for camera_y in cameras_to_process_y:
 
         print('mean # right top ('+label_right_chamber_top+') : ', rt.mean(), file=textfile)
         print('mean # right bottom ('+label_right_chamber_bottom+') : ', rb.mean(), file=textfile)
-
-        # if camera_x==cameras_to_process_x[0] and camera_x==cameras_to_process_y[0]:
 
         data_line_left = pd.DataFrame([{'Date': date, 'Trial': trial_n,
                                             'Light Condition Top': column_light_conditions_top[camera_position_x],

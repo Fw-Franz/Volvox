@@ -29,6 +29,15 @@ from owl import mcam_data
 ## 1) Parameters governing loading and tracking
 ############################################
 
+data_path = r"../Data/8_12_23"
+root_directory = os.path.abspath(data_path) + '//'
+
+data_filename=r'Date_ExerpimentID_trialnumber.nc'
+
+date='8_12_23'
+
+trial_n=1
+
 analyze_subset = True  # if this is True, it will only analyze frames starting at frames_to_analyze_start
 # going to frames_to_analyze_end. Check in the image sequence if there was any moving of the chamber at beginning or end.
 
@@ -96,75 +105,7 @@ fps = 4  # frames per second of video taking (as in what was your framerate duri
 plot_1st_chamber = True  # True or False to plot the left-right bias counts
 plot_2nd_chamber = True  # True or False to plot the top-bottom bias counts
 
-
-# label_left_chamber_top = "Top half Nimodipine"
-# label_left_chamber_bottom = "Bottom half Nimodipine"
-# label_right_chamber_top = "Top half Control"
-# label_right_chamber_bottom = "Bottom half Control"
-
-root_directory = r'/MCAM_data/Data_Franz/8_12_23/'
-
-date='8_12_23'
-
-# dataset = mcam_data.load(root_directory+'8_12_23_trial_1_alga_gro_bright10_switch90s_double_coated_15min_cool_20230812_125200_503.nc')
-# trial_n=1
-
-# dataset = mcam_data.load(root_directory+'8_12_23_trial_2_alga_gro_bright10_switch90s_double_coated_15min_cool_20230812_131341_518.nc')
-# trial_n=2
-# #
-# dataset = mcam_data.load(root_directory+'8_12_23_trial_3_alga_gro_bright10_switch90s_double_coated_15min_cool_20230812_161015_701.nc')
-# trial_n=3
-#
-dataset = mcam_data.load(root_directory+'8_12_23_trial_4_alga_gro_bright10_switch90s_double_coated_15min_cool_20230812_163236_237.nc')
-trial_n=4
-
-# dataset = mcam_data.load(root_directory+'8_12_23_trial_5_alga_gro_bright10_switch90s_double_coated_15min_cool_20230812_165515_950.nc')
-# trial_n=5
-
-
-
-
-# datasets 8_12_23 N_C_F_R
-# dataset = mcam_data.load(root_directory+'8_12_23_trial_6_N_C_F_R_20230812_175242_499.nc')
-# dataset = mcam_data.load(root_directory+'8_12_23_trial_7_N_C_F_R_same_V_as_trial6_20230812_181318_177.nc')
-# dataset = mcam_data.load(root_directory+'8_12_23_trial_8_N_C_F_R_20230812_185038_296.nc')
-# dataset = mcam_data.load(root_directory+'8_12_23_trial_9_N_C_F_R_20230812_194305_354.nc')
-# dataset = mcam_data.load(root_directory+'8_12_23_trial_10_N_C_F_R_20230812_203310_892.nc')
-
-
-# datasets 8_12_23 Nimodipine
-# dataset = mcam_data.load(root_directory+'8_12_23_trial_11_Nimodipine_20230812_212135_943.nc')
-# trial_n=11
-
-# dataset = mcam_data.load(root_directory+'8_12_23_trial_12_Nimodipine2_20230812_220807_397.nc')
-# trial_n=12
-
-# dataset = mcam_data.load(root_directory+'8_12_23_trial_12_Nimodipine2_20230812_232934_967.nc')
-# trial_n=13
-
-
-# date='8_13_23'
-# dataset = mcam_data.load(root_directory+'8_13_23_trial_2_Nimodipine_new_20230813_121708_324.nc')
-# trial_n=2
-# dataset = mcam_data.load(root_directory+'8_13_23_trial_3_Nimodipine_old_1p5hrs_20230813_143148_591.nc')
-# trial_n=3
-# dataset = mcam_data.load(root_directory+'8_13_23_trial_4_Nimodipine_old_3hrs_20230813_161513_926.nc')
-# trial_n=4
-# dataset = mcam_data.load(root_directory+'8_13_23_trial_5_Nimodipine_old_4hrs_20230813_190030_112.nc')
-# trial_n=5
-
-
-# date='8_11_23'
-# dataset = mcam_data.load(root_directory+'8_11_23_trial_7_alga_gro_bright10_switch90s_double_coated_30min_20230811_155616_714.nc')
-# trial_n=7
-
-# date='8_1_23'
-# dataset = mcam_data.load(root_directory+'8_1_23_trial_2_30min_200ul_20230801_151542_076.nc')
-# trial_n=2
-
-# dataset = mcam_data.load(root_directory+'8_1_23_trial_3_30min_200ul_20230801_160607_667.nc')
-# trial_n=3
-
+dataset = mcam_data.load(root_directory+data_filename)
 
 
 sub_folder_name = date+'_trial_'+str(trial_n)
@@ -211,11 +152,8 @@ for camera_y in cameras_to_process_y:
 
         tp.annotate(f, frames[frames_to_analyze_start]);
 
-        # f2 = tp.locate(frames[0], int(5), invert=False)
-        # f2.head()
         directory_new=root_directory
 
-        # base_dir = str(Path(directory_new).parents[0])
         graph_folder=subfolder_path+'Graphs/'
         data_folder=subfolder_path+'Data/'
 
@@ -327,13 +265,7 @@ for camera_y in cameras_to_process_y:
         ii = 0
         for i in unique_list:
             t5 = t4.loc[t4.frame == i]
-
-            #     t_left1=t5.loc[(t5.x<x1)&(t5.y<y)]
-            #     t_right1=t5.loc[(t5.x>x2)&(t5.y<y)]
-
-            #     t_left2=t5.loc[(t5.x<x1)&(t5.y>y)]
-            #     t_right2=t5.loc[(t5.x>x2)&(t5.y>y)]
-
+            
             t_left_top= t5.loc[(t5.y < midpoint_y+1) & (t5.x > midpoint_x)]
             t_left_bottom = t5.loc[(t5.y < midpoint_y+1) & (t5.x < midpoint_x+1)]
 
@@ -354,7 +286,6 @@ for camera_y in cameras_to_process_y:
         print('mean # right top ('+label_right_chamber_top+') : ', rt.mean(), file=textfile)
         print('mean # right bottom ('+label_right_chamber_bottom+') : ', rb.mean(), file=textfile)
 
-        # if camera_x==cameras_to_process_x[0] and camera_x==cameras_to_process_y[0]:
         data_line_left = pd.DataFrame([{'Date': date, 'Trial': trial_n,
                                             'Light Condition Top': column_light_conditions_top[camera_position_x],
                                             'Light Condition Bottom': column_light_conditions_bottom[camera_position_x],
